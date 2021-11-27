@@ -27,7 +27,6 @@ app.use(express.static('static'));
 // return all paintings
 app.get("/", (req, res) => {
   console.log(`Returning all paintings`);
-  res.setHeader('Content-Type', 'application/json');
   res.json(paintings);
 });
 
@@ -63,11 +62,19 @@ app.get("/gallery/:id", (req, res) => {
 
 // all paintings between min and max years
 app.get("/year/:min/:max", (req, res) => {
+  let resPaintings = paintings.filter(p => {
+    return p.yearOfWork <= req.params.max &&
+           p.yearOfWork >= req.params.min;
+  });
 
+  if (resPaintings && resPaintings.length > 0) {
+    console.log(`Returning paintings between years ${req.params.min}-${req.params.max}`);
+    res.json(resPaintings[0]);
+  } else {
+    res.send(`No paintings found between years ${req.params.min}-${req.params.max}`);
+    console.log(`No paintings found between years ${req.params.min}-${req.params.max}`);
+  }
 });
-
-//app.get("/title/:id/:sub", (req, res) => {req.params.sub, req.params.id});
-
 
 app.listen(PORT, 'localhost', `Listening on ${PORT}`);
 console.log(`Listening on ${HOST}:${PORT}`);
