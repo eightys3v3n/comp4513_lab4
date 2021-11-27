@@ -48,7 +48,17 @@ app.get("/:id", (req, res) => {
 
 // return all paintings in gallery
 app.get("/gallery/:id", (req, res) => {
+  let resPaintings = paintings.filter(p => {
+    return p.gallery.galleryID == req.params.id;
+  });
 
+  if (resPaintings && resPaintings.length > 0) {
+    console.log(`Returning paintings in Gallery with ID ${req.params.id}`);
+    res.json(resPaintings);
+  } else {
+    res.send(`No paintings found in Gallery with ID ${req.params.id}`);
+    console.log(`No paintings found in Gallery with ID ${req.params.id}`);
+  }
 });
 
 // all paintings between min and max years
